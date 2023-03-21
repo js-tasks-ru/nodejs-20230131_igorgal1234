@@ -15,22 +15,17 @@ server.on("request", (req, res) => {
     case "DELETE":
       if (pathname.includes("/")) {
         endResponse(400, "Nested folders are not supported");
+      } else {
+        fs.unlink(filepath, (err) => {
+          if (err && err.code === "ENOENT") {
+            endResponse(404, "There is no such file.");
+          } else if (err) {
+            endResponse(500, "Something went wrong.");
+          } else {
+            endResponse(200, "File has been deleted successfully");
+          }
+        });
       }
-      fs.access(filepath, (err) => {
-        if (err && err.code === "ENOENT") {
-          endResponse(404, "There is no such file.");
-        } else if (err) {
-          endResponse(500, "Something went wrong.");
-        } else {
-          fs.unlink(filepath, (err) => {
-            if (err) {
-              endResponse(500, "Something went wrong.");
-            } else {
-              endResponse(200, "File has been deleted successfully");
-            }
-          });
-        }
-      });
 
       break;
 
