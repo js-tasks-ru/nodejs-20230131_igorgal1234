@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const connection = require('../libs/connection');
+const mongoose = require("mongoose");
+const connection = require("../libs/connection");
 
 const productSchema = new mongoose.Schema({
   title: {
@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema({
 
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
+    ref: "Category",
     required: true,
   },
 
@@ -29,7 +29,18 @@ const productSchema = new mongoose.Schema({
   },
 
   images: [String],
-
 });
 
-module.exports = connection.model('Product', productSchema);
+productSchema.index(
+  { title: "text", description: "text" },
+  {
+    weights: {
+      title: 10,
+      description: 5,
+    },
+    default_language: "russian",
+    name: "TextSearchIndex",
+  }
+);
+
+module.exports = connection.model("Product", productSchema);
