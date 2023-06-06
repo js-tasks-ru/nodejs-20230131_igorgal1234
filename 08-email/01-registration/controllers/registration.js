@@ -7,13 +7,6 @@ module.exports.register = async (ctx, next) => {
   const verificationToken = uuid();
   const { displayName, email, password } = ctx.request.body;
 
-  if (!displayName || !email || !password) {
-    ctx.throw(
-      400,
-      "Пожалуйста убедитесь, что параметры userName, email и password были установлены."
-    );
-  }
-
   try {
     const user = await User.create({ displayName, email, verificationToken });
     await user.setPassword(password);
@@ -39,10 +32,6 @@ module.exports.register = async (ctx, next) => {
 
 module.exports.confirm = async (ctx, next) => {
   const verificationToken = ctx.request.body.verificationToken;
-
-  if (!verificationToken) {
-    ctx.throw(400, "Отсутствует токен подтверждения.");
-  }
 
   const user = await User.findOne({ verificationToken });
 
