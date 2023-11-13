@@ -30,7 +30,7 @@ module.exports.checkout = async function checkout(ctx, next) {
 };
 
 module.exports.getOrdersList = async function ordersList(ctx, next) {
-  const orderList = await Order.find({ user: ctx.user });
+  const orderList = await Order.find({ user: ctx.user }).populate("product");
 
   ctx.status = 200;
   ctx.body = { orders: orderList.map((order) => mapOrder(order)) };
