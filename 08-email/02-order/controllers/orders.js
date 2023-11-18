@@ -6,17 +6,8 @@ const mapOrder = require("../mappers/order");
 module.exports.checkout = async function checkout(ctx, next) {
   const { product, phone, address } = ctx.request.body;
   const user = ctx.user;
-  let order;
 
-  try {
-    order = await Order.create({ user, product, phone, address });
-  } catch (error) {
-    if (error.errors) {
-      throw error;
-    }
-
-    ctx.throw(500, "Ошибка при создании ордера.");
-  }
+  const order = await Order.create({ user, product, phone, address });
 
   await sendMail({
     template: "order-confirmation",

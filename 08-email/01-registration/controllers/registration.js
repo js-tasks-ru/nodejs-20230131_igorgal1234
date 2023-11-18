@@ -7,17 +7,9 @@ module.exports.register = async (ctx, next) => {
   const verificationToken = uuid();
   const { displayName, email, password } = ctx.request.body;
 
-  try {
-    const user = await User.create({ displayName, email, verificationToken });
-    await user.setPassword(password);
-    await user.save();
-  } catch (error) {
-    if (error.errors) {
-      throw error;
-    }
-
-    ctx.throw(500, "Ошибка при сохранении пользователя");
-  }
+  const user = await User.create({ displayName, email, verificationToken });
+  await user.setPassword(password);
+  await user.save();
 
   await sendMail({
     template: "confirmation",
