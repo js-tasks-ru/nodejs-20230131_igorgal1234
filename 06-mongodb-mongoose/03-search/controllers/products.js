@@ -18,7 +18,7 @@ module.exports.productsByQuery = async function productsByQuery(ctx, next) {
       },
     },
     { score: { $meta: "textScore" } }
-  );
+  ).sort({ score: { $meta: "textScore" } });
 
   ctx.body = { products: products.map(mapProduct) };
 };
